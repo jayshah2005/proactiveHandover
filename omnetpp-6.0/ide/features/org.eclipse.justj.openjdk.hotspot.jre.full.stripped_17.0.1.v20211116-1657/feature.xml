@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2020 Eclipse contributors and others.
+
+This program and the accompanying materials
+are made available under the terms of the Eclipse Public License 2.0
+which accompanies this distribution, and is available at
+https://www.eclipse.org/legal/epl-2.0/
+
+SPDX-License-Identifier: EPL-2.0
+-->
+<feature
+      id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped"
+      label="%featureName"
+      version="17.0.1.v20211116-1657"
+      provider-name="%providerName">
+
+   <description>
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <plugin
+         id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped"
+         download-size="19"
+         install-size="64"
+         version="17.0.1.v20211116-1657"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.linux.aarch64"
+         os="linux"
+         arch="aarch64"
+         download-size="59146"
+         install-size="86461"
+         version="17.0.1.v20211116-1657"
+         fragment="true"/>
+
+   <plugin
+         id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.linux.x86_64"
+         os="linux"
+         arch="x86_64"
+         download-size="60350"
+         install-size="86636"
+         version="17.0.1.v20211116-1657"
+         fragment="true"/>
+
+   <plugin
+         id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.macosx.aarch64"
+         os="macosx"
+         arch="aarch64"
+         download-size="56905"
+         install-size="81542"
+         version="17.0.1.v20211116-1657"
+         fragment="true"/>
+
+   <plugin
+         id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.macosx.x86_64"
+         os="macosx"
+         arch="x86_64"
+         download-size="57997"
+         install-size="81149"
+         version="17.0.1.v20211116-1657"
+         fragment="true"/>
+
+   <plugin
+         id="org.eclipse.justj.openjdk.hotspot.jre.full.stripped.win32.x86_64"
+         os="win32"
+         arch="x86_64"
+         download-size="57190"
+         install-size="76196"
+         version="17.0.1.v20211116-1657"
+         fragment="true"/>
+
+</feature>

@@ -1,0 +1,48 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven 3.5.3
+Built-By: fabio
+Build-Jdk: 11.0.9
+Bundle-ManifestVersion: 2
+Bundle-Name: Parser Plug-in
+Bundle-SymbolicName: org.python.pydev.parser; singleton:=true
+Bundle-Version: 9.2.0.202110311311
+Bundle-ClassPath: parser.jar
+Bundle-Activator: org.python.pydev.parser.ParserPlugin
+Eclipse-BundleShape: dir
+Require-Bundle: org.junit;bundle-version="4.0.0";resolution:=optional,or
+ g.eclipse.core.runtime,org.eclipse.core.resources,org.eclipse.text,org.
+ python.pydev.core;bundle-version="[9.2.0,9.2.1)"
+Bundle-ActivationPolicy: lazy
+Export-Package: org.python.pydev.parser,org.python.pydev.parser.fastpars
+ er,org.python.pydev.parser.fastparser.grammar_fstrings_common,org.pytho
+ n.pydev.parser.grammar25,org.python.pydev.parser.grammar26,org.python.p
+ ydev.parser.grammar27,org.python.pydev.parser.grammar30,org.python.pyde
+ v.parser.grammar36,org.python.pydev.parser.grammar_fstrings,org.python.
+ pydev.parser.grammarcommon,org.python.pydev.parser.jython,org.python.py
+ dev.parser.jython.ast,org.python.pydev.parser.jython.ast.factory,org.py
+ thon.pydev.parser.preferences,org.python.pydev.parser.prettyprinter,org
+ .python.pydev.parser.prettyprinterv2,org.python.pydev.parser.visitors,o
+ rg.python.pydev.parser.visitors.comparator,org.python.pydev.parser.visi
+ tors.scope
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: org.python.pydev.parser
+
+Name: schema/pydev_parser_observer.exsd
+SHA-256-Digest: udN0FNzmbxEpmwmTJjpVGwFEXbjSpoqrUOQK36WrpDM=
+
+Name: plugin.xml
+SHA-256-Digest: aOqkeA/EdSN/O8ZxIqGUbXBztq04CzDCT7xwG7QK5Yg=
+
+Name: META-INF/maven/org.python.pydev/org.python.pydev.parser/pom.xml
+SHA-256-Digest: XktZJ88ASKVa4/TWrDHN7nkDFPmdE6/Fc5CYws5vB0g=
+
+Name: parser.jar
+SHA-256-Digest: Idbck/LmmznQ8QGcqSFzeSm2xZbFD5h1LvFi7CFXxW0=
+
+Name: LICENSE.txt
+SHA-256-Digest: J75t01G5GT6rkY9hiDNA+yh/SDVMI+VNinfwannMATI=
+
+Name: META-INF/maven/org.python.pydev/org.python.pydev.parser/pom.proper
+ ties
+SHA-256-Digest: YeaHLiY0nTnbrUqGxzXswndtdarvaDa6KnibXybLTx4=
+

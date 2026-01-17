@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- cologneMap2k2kv600.launchd.xml -->
+
+<launch>
+    <copy file="cologneMap2k2kv600.net.xml" />
+    <copy file="cologneMap2k2kv600.rou.xml" />
+    <copy file="cologneMap2k2kv600.poly.xml" />
+    <copy file="cologneMap2k2kv600.sumo.cfg" type="config" />
+</launch>
