@@ -1,0 +1,154 @@
+# ignore generated files
+src/**/*_m.h
+src/**/*_m.cc
+src/Makefile
+src/Makefile.vc
+/doc/doxy/
+/doc/neddoc/
+*.pcap
+*.sca
+*.vec
+*.vci
+*.anf
+*.qtenvrc
+.settings/
+err/
+src/err
+
+# ignore binary files
+out/
+*.so
+*.dylib
+*.dll
+*.a
+*.lib
+*.exe
+*.o
+*.obj
+*.pdb
+*.idb
+*.manifest
+.tkenvrc
+.tkenvlog
+*.out
+.computed
+
+# ignore backup and temp files
+*.bak
+backups
+*~
+*.log
+
+
+*.FAILED
+*.UPDATED
+*.ERROR
+.cproject
+.project
+ui/com.simulte.configeditor/bin/
+
+# ignore result folders
+/simulations/gtpNetwork/ResultLteCoreNetwork/
+/simulations/*/results*/
+/simulations/*/*/results*/
+/simulations/*/*/*/results*/
+/simulations/*/scenario*/
+/simulations/*/eval*/
+/simulations/*/.cmdenv-log
+*.rt
+*.elog
+
+/simulations/*/*/stats*/
+/simulations/*/*/positions*/
+/simulations/*/*/outLogs*/
+/simulations/*/*/scripts/plots*/
+/simulations/*/*/plots*/
+/simulations/*/*/timeResults*/
+/simulations/*/*/routing*/bkUe?.mrt
+/simulations/*/*/routing*/bkUe??.mrt
+/simulations/*/*/routing*/bkUe???.mrt
+
+/emulation/*/results*/
+/emulation/*/plots*/
+/emulation/*/stats*/test*/
+
+vim files
+*.swp
+*.swo
+.qtenvrc.*
+
+# project file 
+.cproject
+
+# files for performance evaluation
+*.ipynb
+
+
+## More files for .gitignore
+
+# OMNeT++ / Eclipse
+.cproject
+.project
+.metadata/
+.settings/
+ui/com.simulte.configeditor/bin/
+
+# Build artifacts
+out/
+build/
+*.o
+*.so
+*.a
+*.dll
+*.exe
+*.dylib
+*.gch
+
+# OMNeT++ generated files
+*.rt
+*.elog
+*.vci
+*.sca
+*.vec
+*.anf
+*.ini~
+.qtenvrc.*
+
+# Simulation outputs
+/simulations/**/results/
+/simulations/**/scenario/
+/simulations/**/eval/
+/simulations/**/.cmdenv-log
+/simulations/**/stats/
+/simulations/**/positions/
+/simulations/**/outLogs/
+/simulations/**/scripts/plots/
+/simulations/**/plots/
+/simulations/**/timeResults/
+/simulations/**/routing*/bkUe*.mrt
+
+# Emulation outputs
+/emulation/**/results/
+/emulation/**/plots/
+/emulation/**/stats*/
+
+# IDE / editor files
+# vim files
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Jupyter
+*.ipynb
+
+# OS junk
+.DS_Store
+Thumbs.db
+
