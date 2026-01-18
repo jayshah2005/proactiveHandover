@@ -1,9 +1,0 @@
-#! /bin/sh
-#
-# Smoke test of tools and libraries we include with OMNeT++/OMNEST on macOS.
-# Should be sufficient so that it unveils missing files, DLL incompatibility,
-# and similar issues.
-#
-#
-
-# TO BE IMPLEMENTED

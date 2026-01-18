@@ -1,3 +1,0 @@
-#! /bin/sh
-../cqn -n.. -c LargeLookahead omnetpp.ini $*
-

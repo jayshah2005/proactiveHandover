@@ -1,4 +1,0 @@
-#!/bin/sh
-
-./testreader lock
-./testfilereader lock
