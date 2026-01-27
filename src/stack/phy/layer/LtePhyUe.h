@@ -155,6 +155,8 @@ class LtePhyUe : public LtePhyBase
     double getAverageCqi(Direction dir);
     double getVarianceCqi(Direction dir);
     void writeToCSV(const std::string& filename, double simtimeDbl, MacNodeId vehicleId, MacNodeId towerId, double rssi, double distance, double towerLoad);
+    // CHANGE #1: Add new function to write vehicle position data for SVMRegression.py
+    void writeVehiclePositionToCSV(const std::string& filename, double simtimeDbl, MacNodeId vehicleId, MacNodeId towerId, double rssi, double distance, double xCoord, double yCoord);
     void clearFileData(const std::string& filename);
     void clearHalfFileData(const std::string& filePath);
     double getDoubleValueFile(std::string filepath);
@@ -163,6 +165,10 @@ class LtePhyUe : public LtePhyBase
     void performanceAnalysis_LtePhyUe();
     void savePerformanceAnalysis();
     void printMetrics();
+    // SVMRegression.py integration functions
+    void runSVR(unsigned short vehicleID, int simTime);
+    std::pair<double, double> getParfromFileForSVR(const std::string& filepath);
+    double calculatePredictedDistance(double predX, double predY, const inet::Coord& towerCoord);
 
     static const int NUM_TOWERS = 5;
     double bsLoad[NUM_TOWERS] = {0};
@@ -172,6 +178,12 @@ class LtePhyUe : public LtePhyBase
     double speedVehicleM = 0, speedVehicleKM = 0;
     MacNodeId stored_masterId = 0;
     std::string filePath_LtePhyUe = "/home/guest/Downloads/Predictive-Mobility-Modeling-Handover-Decision-Making/Project_GCN_LSTM_HO/simu5G/src/Datafiles/";
+    // SVMRegression.py prediction variables
+    double predictedDistSVR = 0.0;
+    double predXCoordVehicle = 0.0;
+    double predYCoordVehicle = 0.0;
+    int lastSVRSimTime = -1;
+    MacNodeId lastSVRVehicleId = 0;
 };
 
 #endif  /* _LTE_AIRPHYUE_H_ */

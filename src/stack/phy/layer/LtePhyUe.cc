@@ -15,6 +15,10 @@
 #include "stack/phy/packet/LteFeedbackPkt.h"
 #include "stack/phy/feedback/LteDlFeedbackGenerator.h"
 #include <numeric>
+#include <utility>
+#include <cmath>
+#include <cstdlib>
+#include <fstream>
 
 double bsLoadCal1Weighted;
 const int NUM_TOWERS = 5;
@@ -344,6 +348,32 @@ void LtePhyUe::writeToCSV(const std::string& filename, double simtimeDbl, MacNod
     }
 }
 
+// CHANGE #1: Write vehicle position data to simulator_data.csv for SVMRegression.py
+// Format: Time,vehicleId,TowerID,RSSI,Distance,X,Y
+// SVMRegression.py expects: column[0]=timestamp, columns[5,6]=X,Y coordinates, named column "vehicleId"
+void LtePhyUe::writeVehiclePositionToCSV(const std::string& filename, double simtimeDbl, MacNodeId vehicleId, MacNodeId towerId, double rssi, double distance, double xCoord, double yCoord)
+{
+    std::ofstream file(filename, std::ios::app);
+
+    // Write headers only if file is empty
+    if (file.tellp() == 0)
+    {
+        file << "Time,vehicleId,TowerID,RSSI,Distance,X,Y\n";
+    }
+
+    if (file.is_open())
+    {
+        // Write vehicle position data in CSV format
+        // SVMRegression.py reads: column[0]=timestamp, columns[5,6]=X,Y coords, named column "vehicleId"
+        file << simtimeDbl << "," << vehicleId << "," << towerId << "," << rssi << "," << distance << "," << xCoord << "," << yCoord << "\n";
+        file.close();
+    }
+    else
+    {
+        std::cerr << "Unable to open file " << filename << "\n";
+    }
+}
+
 void LtePhyUe::clearFileData(const std::string& filename)
 {
     // Open the file in truncation mode to clear its content
@@ -431,6 +461,48 @@ void LtePhyUe::callingPython(const std::string& filename)
     // Use the captured values as needed in your application
 }
 
+// SVMRegression.py integration functions
+// CHANGE #3: Updated comments - simulator_data.csv is now auto-generated during simulation
+// Format: Time,vehicleId,TowerID,RSSI,Distance,X,Y
+// SVMRegression.py reads:
+//   - Column 0: timestamp for temporal sequence
+//   - Columns 5-6: Vehicle X,Y coordinates for position prediction
+//   - Named column "vehicleId": Vehicle identifier for filtering
+// The fallback to dataStorage.csv is no longer needed as simulator_data.csv is properly generated
+void LtePhyUe::runSVR(unsigned short vehicleID, int simTime)
+{
+    std::string pypredSVR_CmdPyCpp = "python3 " + filePath_LtePhyUe + "python_script/SVMRegression.py " 
+                                     + std::to_string(vehicleID) + " " + std::to_string(simTime);
+    system(pypredSVR_CmdPyCpp.c_str());
+}
+
+std::pair<double, double> LtePhyUe::getParfromFileForSVR(const std::string& filepath)
+{
+    std::ifstream file(filepath);
+    double xCoord = 0.0;
+    double yCoord = 0.0;
+    
+    if (file.is_open()) {
+        file >> xCoord >> yCoord;
+        file.close();
+    }
+    
+    return std::make_pair(xCoord, yCoord);
+}
+
+double LtePhyUe::calculatePredictedDistance(double predX, double predY, const inet::Coord& towerCoord)
+{
+    // Calculate Euclidean distance from predicted vehicle position to tower position
+    double dx = predX - towerCoord.x;
+    double dy = predY - towerCoord.y;
+    double dz = 0.0; // Assuming 2D for now, can be extended to 3D if needed
+    
+    // If towerCoord has z coordinate, use it
+    // double dz = predZ - towerCoord.z;
+    
+    return sqrt(dx * dx + dy * dy + dz * dz);
+}
+
 void LtePhyUe::handoverHandler(LteAirFrame* frame, UserControlInfo* lteInfo)
 {
     lteInfo->setDestId(nodeId_);
@@ -489,7 +561,34 @@ void LtePhyUe::handoverHandler(LteAirFrame* frame, UserControlInfo* lteInfo)
     else category = "SPEED_160PLUS";
 
     //distance
-    dist = getDoubleValueFile(filePath_LtePhyUe+"dist.txt");
+    // ORIGINAL CODE: Manually reading distance from file
+    // dist = getDoubleValueFile(filePath_LtePhyUe+"dist.txt");
+    
+    // NEW CODE: Using SVMRegression.py to predict distance
+    // Run SVR prediction every 15 simulation time units (as per documentation)
+    int after_5SimTime = ((int)simTime().dbl() + 5);
+    if ((simTime().dbl() >= 15) && ((int)simTime().dbl() % 15 == 0) && (nodeId_ != lastSVRVehicleId || (int)simTime().dbl() != lastSVRSimTime)) {
+        runSVR(nodeId_, after_5SimTime);
+        lastSVRSimTime = (int)simTime().dbl();
+        lastSVRVehicleId = nodeId_;
+        
+        // Read predicted coordinates from outputSVR.txt
+        std::pair<double, double> predVehicleCoordSVR = getParfromFileForSVR(filePath_LtePhyUe + "python_script/outputSVR.txt");
+        predXCoordVehicle = predVehicleCoordSVR.first;
+        predYCoordVehicle = predVehicleCoordSVR.second;
+    }
+    
+    // Calculate predicted distance from predicted vehicle position to tower position
+    // If both coordinates are 0, it means no prediction was available (SVMRegression.py returns 0,0 when no data found)
+    if (predXCoordVehicle != 0.0 || predYCoordVehicle != 0.0) {
+        inet::Coord towerCoord = lteInfo->getCoord();
+        predictedDistSVR = calculatePredictedDistance(predXCoordVehicle, predYCoordVehicle, towerCoord);
+        // Use predicted distance for handover decision
+        dist = predictedDistSVR;
+    } else {
+        // Fallback to original method if prediction not available (both coordinates are 0)
+        dist = getDoubleValueFile(filePath_LtePhyUe+"dist.txt");
+    }
 
     //plr
     plrHO_LtePhyUe = getDoubleValueFile(filePath_LtePhyUe+"plrHO.txt");
@@ -505,6 +604,11 @@ void LtePhyUe::handoverHandler(LteAirFrame* frame, UserControlInfo* lteInfo)
 
     //storing data in csv
     writeToCSV(filePath_LtePhyUe+"dataStorage.csv", simTime().dbl(), nodeId_, lteInfo->getSourceId(), rssi, dist, eachTowerLoad);
+    
+    // CHANGE #2: Also write vehicle position data to simulator_data.csv for SVMRegression.py
+    // Get current vehicle position from radio position
+    inet::Coord vehiclePos = getRadioPosition();
+    writeVehiclePositionToCSV(filePath_LtePhyUe+"simulator_data.csv", simTime().dbl(), nodeId_, lteInfo->getSourceId(), rssi, dist, vehiclePos.x, vehiclePos.y);
 
 //    std::cout << "LtePhyUe: Num HO: " << numHO << " Failed HO: " << failHO << " PingPong HO: " << pingpongHO
 //            << " Time HO: " << timeHO_LtePhyUe << " PLR HO: " << plrHO_LtePhyUe << endl;
