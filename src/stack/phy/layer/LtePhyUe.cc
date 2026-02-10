@@ -753,24 +753,6 @@ void LtePhyUe::performanceAnalysis_LtePhyUe()
     }
 }
 
-void LtePhyUe::performanceAnalysis_LtePhyUe()
-{
-    if (simTime().dbl() >= 100 && !isPerformedAnalysisLtePhyUe)
-    {
-        isPerformedAnalysisLtePhyUe = true; // to print one time
-
-        std::cout << "---------------------------------------------------------------" << std::endl;
-        std::cout << "End Simtime (LtePhyUe) - " << simTime().dbl() << std::endl;
-        std::cout << "Density - Num HO: " << numHO << " Failed HO: " << failHO << " PingPong HO: " << pingpongHO
-                << " Time HO: " << timeHO_LtePhyUe << " PLR HO: " << plrHO_LtePhyUe << endl;
-        printMetrics();
-        std::cout << "---------------------------------------------------------------" << std::endl;
-        
-        // Save results to CSV
-        savePerformanceAnalysisToCSV();
-    }
-}
-
 void LtePhyUe::savePerformanceAnalysisToCSV()
 {
     std::string csvFile = filePath_LtePhyUe + "handover_performance_results.csv";
