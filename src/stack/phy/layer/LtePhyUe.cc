@@ -746,6 +746,59 @@ void LtePhyUe::performanceAnalysis_LtePhyUe()
                 << " Time HO: " << timeHO_LtePhyUe << " PLR HO: " << plrHO_LtePhyUe << endl;
         printMetrics();
         std::cout << "---------------------------------------------------------------" << std::endl;
+        
+        // Save results to CSV
+        savePerformanceAnalysisToCSV();
+    }
+}
+
+void LtePhyUe::performanceAnalysis_LtePhyUe()
+{
+    if (simTime().dbl() >= 100 && !isPerformedAnalysisLtePhyUe)
+    {
+        isPerformedAnalysisLtePhyUe = true; // to print one time
+
+        std::cout << "---------------------------------------------------------------" << std::endl;
+        std::cout << "End Simtime (LtePhyUe) - " << simTime().dbl() << std::endl;
+        std::cout << "Density - Num HO: " << numHO << " Failed HO: " << failHO << " PingPong HO: " << pingpongHO
+                << " Time HO: " << timeHO_LtePhyUe << " PLR HO: " << plrHO_LtePhyUe << endl;
+        printMetrics();
+        std::cout << "---------------------------------------------------------------" << std::endl;
+        
+        // Save results to CSV
+        savePerformanceAnalysisToCSV();
+    }
+}
+
+void LtePhyUe::savePerformanceAnalysisToCSV()
+{
+    std::string csvFile = filePath_LtePhyUe + "handover_performance_results.csv";
+    std::ofstream file(csvFile, std::ios::app);
+    
+    if (file.is_open())
+    {
+        // Write header if file is new/empty
+        std::ifstream checkFile(csvFile);
+        checkFile.seekg(0, std::ios::end);
+        if (checkFile.tellg() == 0)
+        {
+            file << "Metric,Value,EndSimTime\n";
+        }
+        checkFile.close();
+        
+        // Write Density metrics
+        file << "Num_HO," << numHO << "," << simTime().dbl() << "\n";
+        file << "Failed_HO," << failHO << "," << simTime().dbl() << "\n";
+        file << "PingPong_HO," << pingpongHO << "," << simTime().dbl() << "\n";
+        file << "Time_HO," << timeHO_LtePhyUe << "," << simTime().dbl() << "\n";
+        file << "PLR_HO," << plrHO_LtePhyUe << "," << simTime().dbl() << "\n";
+        
+        file.close();
+        std::cout << "[CSV] Saved density metrics to: " << csvFile << std::endl;
+    }
+    else
+    {
+        std::cerr << "[ERROR] Could not open file: " << csvFile << std::endl;
     }
 }
 
