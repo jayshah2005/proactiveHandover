@@ -783,16 +783,17 @@ void LtePhyUe::savePerformanceAnalysisToCSV()
         checkFile.seekg(0, std::ios::end);
         if (checkFile.tellg() == 0)
         {
-            file << "Metric,Value,EndSimTime\n";
+            file << "Num_HO,Failed_HO,PingPong_HO,Time_HO,PLR_HO,EndSimTime\n";
         }
         checkFile.close();
         
-        // Write Density metrics
-        file << "Num_HO," << numHO << "," << simTime().dbl() << "\n";
-        file << "Failed_HO," << failHO << "," << simTime().dbl() << "\n";
-        file << "PingPong_HO," << pingpongHO << "," << simTime().dbl() << "\n";
-        file << "Time_HO," << timeHO_LtePhyUe << "," << simTime().dbl() << "\n";
-        file << "PLR_HO," << plrHO_LtePhyUe << "," << simTime().dbl() << "\n";
+        // Write all Density metrics in a single row (one run per row)
+        file << numHO << "," 
+             << failHO << "," 
+             << pingpongHO << "," 
+             << timeHO_LtePhyUe << "," 
+             << plrHO_LtePhyUe << "," 
+             << simTime().dbl() << "\n";
         
         file.close();
         std::cout << "[CSV] Saved density metrics to: " << csvFile << std::endl;
