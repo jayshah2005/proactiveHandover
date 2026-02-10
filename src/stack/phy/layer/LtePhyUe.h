@@ -166,6 +166,7 @@ class LtePhyUe : public LtePhyBase
     void savePerformanceAnalysis();
     void printMetrics();
     void savePerformanceAnalysisToCSV();
+    void saveSpeedMetricsToCSV();
     // SVMRegression.py integration functions
     void runSVR(unsigned short vehicleID, int simTime);
     std::pair<double, double> getParfromFileForSVR(const std::string& filepath);

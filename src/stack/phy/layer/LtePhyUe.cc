@@ -732,6 +732,7 @@ void LtePhyUe::printMetrics() {
                   << ", PLR=" << metrics.plrHO_speed
                   << std::endl;
     }
+    saveSpeedMetricsToCSV();
 }
 
 void LtePhyUe::performanceAnalysis_LtePhyUe()
@@ -795,6 +796,45 @@ void LtePhyUe::savePerformanceAnalysisToCSV()
         
         file.close();
         std::cout << "[CSV] Saved density metrics to: " << csvFile << std::endl;
+    }
+    else
+    {
+        std::cerr << "[ERROR] Could not open file: " << csvFile << std::endl;
+    }
+}
+
+void LtePhyUe::saveSpeedMetricsToCSV()
+{
+    std::string csvFile = filePath_LtePhyUe + "handover_speed_metrics.csv";
+    std::ofstream file(csvFile, std::ios::app);
+    
+    if (file.is_open())
+    {
+        // Write header if file is new/empty
+        std::ifstream checkFile(csvFile);
+        checkFile.seekg(0, std::ios::end);
+        if (checkFile.tellg() == 0)
+        {
+            file << "Speed_Category,Total_HO,Failed_HO,PingPong_HO,Time_HO,PLR_HO,EndSimTime\n";
+        }
+        checkFile.close();
+        
+        // Write Speed metrics for each category
+        for (const auto &entry : speedMetrics)
+        {
+            const auto &category = entry.first;
+            const auto &metrics = entry.second;
+            file << category << ","
+                 << metrics.numHO_speed << ","
+                 << metrics.failHO_speed << ","
+                 << metrics.pingpongHO_speed << ","
+                 << metrics.timeHO_speed << ","
+                 << metrics.plrHO_speed << ","
+                 << simTime().dbl() << "\n";
+        }
+        
+        file.close();
+        std::cout << "[CSV] Saved speed metrics to: " << csvFile << std::endl;
     }
     else
     {
